@@ -13,9 +13,10 @@ npx tsc --noEmit
 npm run build
 
 ## Content status
-The Luanda taxi, driver-charging and proposed Xyami GO Smart Hub scenes are
-original AI-generated concept photography. The hub is clearly presented as a
-future design concept, not an existing site or confirmed Xyami partnership.
+The Luanda taxi, driver-charging, five Driver Journey scenes and proposed Xyami
+GO Smart Hub scene are original AI-generated concept photography. The hub is
+clearly presented as a future design concept, not an existing site or confirmed
+Xyami partnership.
 Vehicle assets are manufacturer reference images; vehicle availability,
 service rollout and future markets are not claimed as current deployments.
 

@@ -23,6 +23,11 @@ html=html.replaceAll('BYD Seal U DM-i PHEV','Geely EX5 EV').replaceAll('BYD Seal
 replace('GO Energy Hub · Bay 02','GO Xyami Concept · Bay 02');
 replace('Scene 01 — hub visible in the distance','Scene 01 — a hub within everyday life');
 html=html.replaceAll('Scene 01 — hub visible in the distance','Scene 01 — a hub within everyday life').replaceAll('Scene 02 — approaching the site','Scene 02 — approaching Xyami, Luanda').replaceAll('Scene 03 — infrastructure components','Scene 03 — solar, storage and smart charging').replaceAll('Scene 04 — vehicle connects','Scene 04 — people and vehicles connect').replaceAll('Scene 06 — clean urban integration','Scene 06 — charging becomes part of city life');
+html=html.replace("onUpdate:s=>gsap.set('#drvBar',{scaleX:s.progress})",()=>`onUpdate:s=>{
+    gsap.set('#drvBar',{scaleX:s.progress});
+    const cards=$$('.drv-card',track),center=innerWidth/2;
+    cards.forEach(card=>{const box=card.getBoundingClientRect();card.classList.toggle('active',Math.abs(box.left+box.width/2-center)<box.width*.62);});
+  }`);
 // People-led bridge before the original horizontal driver sequence.
 replace('<!-- ============ 05 DRIVERS ============ -->',`<section class="people-chapter"><img src="/assets/luanda-charging.webp" alt="Angolan driver connecting a GO electric vehicle to a charger in a Luanda shopping parking area — concept photography" loading="lazy"/><div class="people-shade"></div><div class="container"><p class="eyebrow" data-reveal>BUILT AROUND PEOPLE</p><h2 class="h2" data-reveal>Real lives.<br/>New possibilities.</h2><p data-reveal>From the first pickup to the next recharge.<br/>A network built around the people who keep Luanda moving.</p><a class="btn" href="#waitlist" data-tab="drivers">Drive with GO ↗</a></div><small>GO MOBILITY VISION · CONCEPT PHOTOGRAPHY</small></section><!-- ============ 05 DRIVERS ============ -->`);
 // Make the provided form honest and functional without inventing a remote backend.

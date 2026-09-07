@@ -1301,7 +1301,11 @@ steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bott
 mm.add('(min-width:1024px)',()=>{
   if(RM)return;
   const track=$('#drvTrack'),getW=()=>track.scrollWidth-innerWidth;
-  gsap.to(track,{x:()=>-getW(),ease:'none',scrollTrigger:{trigger:'#drivers',start:'top top',end:()=>'+='+getW(),scrub:1,pin:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:s=>gsap.set('#drvBar',{scaleX:s.progress})}});
+  gsap.to(track,{x:()=>-getW(),ease:'none',scrollTrigger:{trigger:'#drivers',start:'top top',end:()=>'+='+getW(),scrub:1,pin:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:s=>{
+    gsap.set('#drvBar',{scaleX:s.progress});
+    const cards=$$('.drv-card',track),center=innerWidth/2;
+    cards.forEach(card=>{const box=card.getBoundingClientRect();card.classList.toggle('active',Math.abs(box.left+box.width/2-center)<box.width*.62);});
+  }}});
 });
 
 /* ---------- vehicle cinematic ---------- */
