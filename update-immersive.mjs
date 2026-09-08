@@ -69,7 +69,7 @@ html=html.replace('.from(ecoLayers[1],{y:190,duration:1,ease:', '.fromTo(ecoLaye
 html=html.replace('.from(ecoLayers[2],{y:380,duration:1,ease:', '.fromTo(ecoLayers[2],{y:()=>innerWidth<=1100?120:380},{y:0,duration:1,ease:');
 html=html.replace("{xPercent:-4},{xPercent:-19,duration:1.5", "{xPercent:()=>innerWidth<=1100?4:-4,scale:1},{xPercent:()=>innerWidth<=1100?-4:-19,scale:()=>innerWidth<=1100?1.15:1,duration:1.5");
 html=html.replace("/* ---------- smart platform network ---------- */",()=>fs.readFileSync('content/mobile-motion.js','utf8')+'\n/* ---------- smart platform network ---------- */');
-html=html.replace('</head>','<link rel="stylesheet" href="/immersive-updates.css?v=mobile-motion-4"/><link rel="stylesheet" href="/mobile-motion.css?v=4"/></head>');
+html=html.replace('</head>','<link rel="stylesheet" href="/immersive-updates.css?v=mobile-motion-5"/><link rel="stylesheet" href="/mobile-motion.css?v=5"/></head>');
 html=html.replace('</body>','<script src="/immersive-accessibility.js"></script></body>');
 fs.writeFileSync('content/immersive.html',html);
 fs.writeFileSync('app/immersive-document.ts','// Generated from the user-supplied immersive source by update-immersive.mjs\nconst html = '+JSON.stringify(html)+';\nexport default html;\n');
