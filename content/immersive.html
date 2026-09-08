@@ -128,7 +128,7 @@ input,select{font-family:inherit}
 .eco-item p{color:var(--txD2);font-size:16.5px}
 .eco-item .x{margin-top:10px;font-size:14px;color:var(--txD3);display:flex;gap:8px;align-items:center}
 .eco-item .x svg{width:14px;height:14px;color:var(--green)}
-@media(max-width:1023px){.eco-grid{grid-template-columns:1fr}.eco-layer{cursor:default}.eco-desc{border-top:1px solid var(--lineD);margin-top:26px}}
+@media(max-width:1100px){.eco-grid{grid-template-columns:1fr}.eco-layer{cursor:default}.eco-desc{border-top:1px solid var(--lineD);margin-top:26px}}
 .app-sec{background:var(--d9);border-top:1px solid var(--lineD)}
 .app-grid{display:grid;grid-template-columns:minmax(320px,1fr) 400px;gap:clamp(40px,6vw,100px);margin-top:20px}
 .app-step{min-height:64vh;display:flex;flex-direction:column;justify-content:center;padding:40px 0;border-bottom:1px solid var(--lineD)}
@@ -202,7 +202,7 @@ input,select{font-family:inherit}
 .stars button svg{width:18px;height:18px}
 .stars button.on{color:#F5B301;border-color:#F5B301}
 .stars button.on svg{fill:#F5B301}
-@media(max-width:1023px){
+@media(max-width:1100px){
   .app-grid{grid-template-columns:1fr}
   .app-phone-wrap{position:sticky;top:8px;height:520px;z-index:8;padding:6px 0;background:linear-gradient(var(--d9) 75%,transparent);justify-content:center}
   .phone{transform:scale(.66);transform-origin:top center;margin-top:4px}
@@ -220,7 +220,7 @@ input,select{font-family:inherit}
 .drv-card .tag{margin-top:auto;padding-top:26px;font:500 11px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:var(--txD3)}
 .drv-prog{height:2px;background:var(--lineD);margin:0 4vw 70px;position:relative}
 .drv-prog i{position:absolute;inset:0;background:var(--green);transform-origin:left;transform:scaleX(0)}
-@media(max-width:1023px){
+@media(max-width:1100px){
   .drv-track{flex-direction:column;width:auto;padding:40px 4vw 20px}
   .drv-card{width:100%;min-height:0}
   .drv-prog{display:none}
@@ -257,7 +257,7 @@ input,select{font-family:inherit}
 .oem-note{margin-top:34px;font-size:12.5px;color:var(--txD3);max-width:92ch;line-height:1.7;border-left:2px solid rgba(28,229,127,.5);padding-left:16px}
 .oem-note a{color:var(--txD2);text-decoration:underline;text-underline-offset:3px}
 .oem-note a:hover{color:var(--green)}
-@media(max-width:1023px){
+@media(max-width:1100px){
   .veh-pin{height:auto;padding:20px 0 60px}
   .veh-stage{position:relative;opacity:1!important;transform:none!important;clip-path:none!important;height:auto;padding:34px 0}
   .veh-phase{display:none}
@@ -299,7 +299,7 @@ input,select{font-family:inherit}
 .en-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 34px;margin-top:44px;max-width:900px}
 .en-list div{display:flex;gap:12px;align-items:center;padding:15px 0;border-bottom:1px solid var(--lineD);font-size:15px;color:var(--txD2)}
 .en-list svg{width:18px;height:18px;color:var(--green);flex:none}
-@media(max-width:1023px){
+@media(max-width:1100px){
   .en-pin{height:auto;padding:50px 0}
   .en-stage{transform:none!important}
   .charge-card{position:relative;inset:auto;margin-top:30px;opacity:1!important;pointer-events:auto}
@@ -448,7 +448,7 @@ footer{background:var(--ink);border-top:1px solid var(--lineD);padding:80px 0 40
   *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
 }
 </style>
-<link rel="stylesheet" href="/immersive-updates.css"/></head>
+<link rel="stylesheet" href="/immersive-updates.css?v=mobile-2"/></head>
 <body>
 
 <div id="loader" aria-hidden="true">
@@ -1238,7 +1238,7 @@ if(!RM)$$('[data-reveal]').forEach(el=>gsap.fromTo(el,{opacity:0,y:34},{opacity:
 
 /* ---------- hero parallax ---------- */
 const mm=gsap.matchMedia();
-mm.add('(min-width:1024px)',()=>{
+mm.add('(min-width:1101px)',()=>{
   if(RM)return;
   const heroTl=gsap.timeline({scrollTrigger:{trigger:'#city',start:'top top',end:'+=130%',scrub:1,pin:true,anticipatePin:1}});
   heroTl.fromTo('#heroSvg',{scale:1.02},{scale:1.14,ease:'none',duration:1},0)
@@ -1261,7 +1261,7 @@ ecoLayers.forEach((l,i)=>{
   l.addEventListener('focus',on);l.addEventListener('blur',off);
   l.addEventListener('click',()=>{ecoManual=ecoManual===i?null:i;setEcoActive(ecoManual===null?autoEco:i);});
 });
-mm.add('(min-width:1024px)',()=>{
+mm.add('(min-width:1101px)',()=>{
   if(RM)return;
   const tl=gsap.timeline({scrollTrigger:{trigger:'.eco-pin',start:'top top',end:'+=150%',scrub:1,pin:true,anticipatePin:1,
     onUpdate:s=>{autoEco=s.progress<.36?0:s.progress<.72?1:2;if(ecoManual===null)setEcoActive(autoEco);}}});
@@ -1298,7 +1298,7 @@ steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bott
  $$('#stars button').forEach((b,i)=>b.addEventListener('click',()=>$$('#stars button').forEach((x,k)=>x.classList.toggle('on',k<=i))));
 
 /* ---------- drivers horizontal ---------- */
-mm.add('(min-width:1024px)',()=>{
+mm.add('(min-width:1101px)',()=>{
   if(RM)return;
   const track=$('#drvTrack'),getW=()=>track.scrollWidth-innerWidth;
   gsap.to(track,{x:()=>-getW(),ease:'none',scrollTrigger:{trigger:'#drivers',start:'top top',end:()=>'+='+getW(),scrub:1,pin:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:s=>{
@@ -1310,7 +1310,7 @@ mm.add('(min-width:1024px)',()=>{
 
 /* ---------- vehicle cinematic ---------- */
 const vehPhase=$('#vehPhase');
-mm.add('(min-width:1024px)',()=>{
+mm.add('(min-width:1101px)',()=>{
   if(RM)return;
   gsap.set('#stageEv',{display:'flex',opacity:0});
   gsap.set('#stageCabin',{clipPath:'circle(0% at 60% 50%)'});
@@ -1362,7 +1362,7 @@ if(trPath){
 }
 
 /* ---------- energy hub ---------- */
-mm.add('(min-width:1024px)',()=>{
+mm.add('(min-width:1101px)',()=>{
   if(RM)return;
   gsap.set('.en-lbl',{opacity:0});
   gsap.set('#chargeCard',{opacity:0});
