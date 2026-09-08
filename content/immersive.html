@@ -259,7 +259,7 @@ input,select{font-family:inherit}
 .oem-note a:hover{color:var(--green)}
 @media(max-width:1100px){
   .veh-pin{height:auto;padding:20px 0 60px}
-  .veh-stage{position:relative;opacity:1!important;transform:none!important;clip-path:none!important;height:auto;padding:34px 0}
+  .veh-stage{position:absolute;height:100%;padding:34px 0}
   .veh-phase{display:none}
   .stage-cap{position:static;transform:none;margin-top:14px;text-align:center}
   .cabin-vp{width:130%}
@@ -301,8 +301,8 @@ input,select{font-family:inherit}
 .en-list svg{width:18px;height:18px;color:var(--green);flex:none}
 @media(max-width:1100px){
   .en-pin{height:auto;padding:50px 0}
-  .en-stage{transform:none!important}
-  .charge-card{position:relative;inset:auto;margin-top:30px;opacity:1!important;pointer-events:auto}
+  .en-stage{will-change:transform}
+  .charge-card{position:relative;inset:auto;margin-top:30px;pointer-events:auto}
   .en-pin-cap{display:none}
   .en-list{grid-template-columns:1fr}
 }
@@ -448,7 +448,7 @@ footer{background:var(--ink);border-top:1px solid var(--lineD);padding:80px 0 40
   *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
 }
 </style>
-<link rel="stylesheet" href="/immersive-updates.css?v=mobile-2"/></head>
+<link rel="stylesheet" href="/immersive-updates.css?v=mobile-motion-3"/><link rel="stylesheet" href="/mobile-motion.css?v=3"/></head>
 <body>
 
 <div id="loader" aria-hidden="true">
@@ -952,7 +952,7 @@ footer{background:var(--ink);border-top:1px solid var(--lineD);padding:80px 0 40
         <span class="cap-k">System</span>
         <h3 id="netTitle">GO Platform Core</h3>
         <p id="netDesc">The operating layer that coordinates mobility, fleet activity and infrastructure across one environment.</p>
-        <div class="net-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3.5v9M9 3.5 6 6.5M9 3.5l3 3M15 20.5v-9M15 20.5l-3-3M15 20.5l3-3"/></svg>Hover or focus a node</div>
+        <div class="net-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3.5v9M9 3.5 6 6.5M9 3.5l3 3M15 20.5v-9M15 20.5l-3-3M15 20.5l3-3"/></svg>Select a node to explore</div>
       </div>
     </div>
     <p class="lead" style="margin-top:44px" data-reveal>GO's software layer helps coordinate mobility, fleet activity and infrastructure across one operating environment.</p>
@@ -1197,7 +1197,7 @@ if(!RM&&typeof Lenis!=='undefined'){
   gsap.ticker.add(t=>lenis.raf(t*1000));
   gsap.ticker.lagSmoothing(0);
 }
-function scrollToEl(el){lenis?lenis.scrollTo(el,{offset:-10,duration:1.4}):el.scrollIntoView({behavior:RM?'auto':'smooth'});}
+function scrollToEl(el){lenis?lenis.scrollTo(el,{offset:-(document.querySelector('.nav').getBoundingClientRect().bottom+14),duration:1.4}):el.scrollIntoView({behavior:RM?'auto':'smooth'});}
  $$('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
     const id=a.getAttribute('href'); if(id.length<2)return;
@@ -1238,7 +1238,7 @@ if(!RM)$$('[data-reveal]').forEach(el=>gsap.fromTo(el,{opacity:0,y:34},{opacity:
 
 /* ---------- hero parallax ---------- */
 const mm=gsap.matchMedia();
-mm.add('(min-width:1101px)',()=>{
+mm.add({mobile:'(max-width:1100px)',desktop:'(min-width:1101px)'},()=>{
   if(RM)return;
   const heroTl=gsap.timeline({scrollTrigger:{trigger:'#city',start:'top top',end:'+=130%',scrub:1,pin:true,anticipatePin:1}});
   heroTl.fromTo('#heroSvg',{scale:1.02},{scale:1.14,ease:'none',duration:1},0)
@@ -1261,12 +1261,12 @@ ecoLayers.forEach((l,i)=>{
   l.addEventListener('focus',on);l.addEventListener('blur',off);
   l.addEventListener('click',()=>{ecoManual=ecoManual===i?null:i;setEcoActive(ecoManual===null?autoEco:i);});
 });
-mm.add('(min-width:1101px)',()=>{
+mm.add({mobile:'(max-width:1100px)',desktop:'(min-width:1101px)'},()=>{
   if(RM)return;
   const tl=gsap.timeline({scrollTrigger:{trigger:'.eco-pin',start:'top top',end:'+=150%',scrub:1,pin:true,anticipatePin:1,
     onUpdate:s=>{autoEco=s.progress<.36?0:s.progress<.72?1:2;if(ecoManual===null)setEcoActive(autoEco);}}});
-  tl.from(ecoLayers[1],{y:190,duration:1,ease:'none'},0)
-    .from(ecoLayers[2],{y:380,duration:1,ease:'none'},0)
+  tl.fromTo(ecoLayers[1],{y:()=>innerWidth<=1100?60:190},{y:0,duration:1,ease:'none'},0)
+    .fromTo(ecoLayers[2],{y:()=>innerWidth<=1100?120:380},{y:0,duration:1,ease:'none'},0)
     .fromTo('#ecoSpine',{scaleY:0},{scaleY:1,duration:.9,ease:'none'},.1)
     .fromTo('#ecoRing',{opacity:0},{opacity:1,duration:.35,ease:'none'},.8);
 });
@@ -1294,11 +1294,11 @@ function setStep(i){
     if(!RM)drive.tween=gsap.to(drive,{t:1,duration:16,ease:'none',onUpdate:drawDrive,onComplete:()=>{const e=$('#etaTxt');if(e)e.textContent='0';}});
   }
 }
-steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bottom 45%',onEnter:()=>setStep(i),onEnterBack:()=>setStep(i)}));
+mm.add('(min-width:1101px)',()=>{steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bottom 45%',onEnter:()=>setStep(i),onEnterBack:()=>setStep(i)}));});
  $$('#stars button').forEach((b,i)=>b.addEventListener('click',()=>$$('#stars button').forEach((x,k)=>x.classList.toggle('on',k<=i))));
 
 /* ---------- drivers horizontal ---------- */
-mm.add('(min-width:1101px)',()=>{
+mm.add({mobile:'(max-width:1100px)',desktop:'(min-width:1101px)'},()=>{
   if(RM)return;
   const track=$('#drvTrack'),getW=()=>track.scrollWidth-innerWidth;
   gsap.to(track,{x:()=>-getW(),ease:'none',scrollTrigger:{trigger:'#drivers',start:'top top',end:()=>'+='+getW(),scrub:1,pin:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:s=>{
@@ -1310,7 +1310,7 @@ mm.add('(min-width:1101px)',()=>{
 
 /* ---------- vehicle cinematic ---------- */
 const vehPhase=$('#vehPhase');
-mm.add('(min-width:1101px)',()=>{
+mm.add({mobile:'(max-width:1100px)',desktop:'(min-width:1101px)'},()=>{
   if(RM)return;
   gsap.set('#stageEv',{display:'flex',opacity:0});
   gsap.set('#stageCabin',{clipPath:'circle(0% at 60% 50%)'});
@@ -1321,9 +1321,9 @@ mm.add('(min-width:1101px)',()=>{
     .fromTo('#carHybridWrap',{scale:.42,rotateY:20,y:70,opacity:0},{scale:1.04,rotateY:-3,y:0,opacity:1,duration:1,ease:'power1.inOut'},0)
     .fromTo('#stageHybrid .callout',{opacity:0},{opacity:1,duration:.25,stagger:.12},.9)
     .to('#stageHybrid .callout',{opacity:0,duration:.2},1.7)
-    .to('#stageHybrid',{opacity:0,duration:.35},2.05)
+    .to('#carHybridWrap',{scale:()=>innerWidth<=1100?1.55:1.3,duration:.4},1.7).to('#stageHybrid',{opacity:0,duration:.35},2.05)
     .fromTo('#stageCabin',{clipPath:'circle(0% at 60% 50%)'},{clipPath:'circle(135% at 60% 50%)',duration:.6,ease:'power2.inOut'},2.05)
-    .fromTo('#cabinVp',{xPercent:-4},{xPercent:-19,duration:1.5,ease:'none'},2.5)
+    .fromTo('#cabinVp',{xPercent:()=>innerWidth<=1100?4:-4,scale:1},{xPercent:()=>innerWidth<=1100?-4:-19,scale:()=>innerWidth<=1100?1.15:1,duration:1.5,ease:'none'},2.5)
     .to('#stageCabin',{opacity:0,scale:1.05,duration:.4,transformOrigin:'50% 50%'},4.15)
     .fromTo('#stageEv',{opacity:0},{opacity:1,duration:.35},4.35)
     .fromTo('#carEvWrap',{scale:.5,rotateY:14,y:60},{scale:1,rotateY:0,y:0,duration:.9,ease:'power1.inOut'},4.35)
@@ -1382,6 +1382,64 @@ mm.add('(min-width:1101px)',()=>{
   gsap.to(cc,{v:68,ease:'power1.inOut',scrollTrigger:{trigger:'#enPin',start:'top top',end:'+=380%',scrub:1,
     onUpdate:()=>{pct.textContent=Math.round(cc.v)+'%';kw.textContent=Math.round(18+cc.v*.42)+' kW';arc.style.strokeDashoffset=326.7*(1-cc.v/100);}}});
 });
+
+/* Portrait composition; native scrolling drives the same narrative. */
+mm.add('(max-width:1100px)',()=>{
+  if(RM)return;
+  let current=-1;
+  const phoneWrap=$('.app-phone-wrap');
+  const sizePhone=()=>phoneWrap.style.setProperty('--phone-scale',Math.min(.72,phoneWrap.clientHeight/744,(innerWidth-44)/360));
+  sizePhone();
+  ScrollTrigger.addEventListener('refreshInit',sizePhone);
+  const select=i=>{if(i===current)return;current=i;setStep(i);};
+  select(0);
+  ScrollTrigger.create({trigger:'.app-grid',start:()=>`top ${$('.nav').getBoundingClientRect().bottom+14}px`,end:()=>'+='+steps.length*innerHeight*.65,pin:true,anticipatePin:1,invalidateOnRefresh:true,
+    onUpdate:s=>select(Math.min(steps.length-1,Math.floor(s.progress*steps.length)))});
+
+  const card=$('#chargeCard'),status=$('.live',card),rows=$$('.cc-rows .l b',card);
+  card.removeAttribute('aria-hidden');
+  const session={progress:0};
+  function charging(){
+    const p=session.progress,connected=p>=.18,active=p>=.3;
+    const amount=gsap.utils.clamp(0,1,(p-.3)/.7);
+    status.textContent=active?'Charging':connected?'Connected':'Waiting';
+    card.dataset.state=active?'charging':connected?'connected':'waiting';
+    $('#ccPct').textContent=Math.round(amount*68)+'%';
+    $('#ccKw').textContent=active?Math.round(18+amount*29)+' kW':'0 kW';
+    $('#ccArc').style.strokeDashoffset=326.7*(1-amount*.68);
+    rows[1].textContent=active?'≈ '+Math.round(48-amount*24)+' min':'—';
+    const solar=Math.round(40+amount*23),storage=Math.round(30-amount*8);
+    rows[2].textContent=active?`Solar ${solar}% · Storage ${storage}% · Grid ${100-solar-storage}%`:'Awaiting connection';
+    $('#enCap').textContent=active?'Charging · energy flowing to your vehicle':connected?'Connection confirmed':'Preparing your charging session';
+    $('#enStage').classList.toggle('energy-flowing',active);
+  }
+  charging();
+  gsap.set('.en-lbl',{opacity:0});
+  gsap.timeline({scrollTrigger:{trigger:'#enPin',start:'top top',end:'+=340%',pin:true,scrub:.65,anticipatePin:1,invalidateOnRefresh:true}})
+    .fromTo('#enStage',{scale:.85,opacity:.5},{scale:1,opacity:1,duration:.65},0)
+    .to('.en-lbl',{opacity:1,duration:.3,stagger:.1},.2)
+    .fromTo(card,{opacity:0,y:35},{opacity:1,y:0,duration:.4},.35)
+    .to('#enCable',{strokeDashoffset:0,duration:.5},.7)
+    .fromTo('#enCar',{scale:.5,opacity:0,svgOrigin:'700 540'},{scale:1,opacity:1,duration:.35},.9)
+    .to(session,{progress:1,duration:3.3,ease:'none',onUpdate:charging},0)
+    .to({},{duration:.45});
+  return ()=>{$('#enStage').classList.remove('energy-flowing');ScrollTrigger.removeEventListener('refreshInit',sizePhone);};
+});
+
+// Decode nearby media before entering pinned scenes. Coalesce refreshes rather
+// than remeasuring on every load/scroll or mobile address-bar movement.
+ScrollTrigger.config({ignoreMobileResize:true});
+let mediaRefresh;
+const refreshMedia=()=>{clearTimeout(mediaRefresh);mediaRefresh=setTimeout(()=>{ScrollTrigger.sort();ScrollTrigger.refresh();},160);};
+const mediaObserver=new IntersectionObserver(entries=>entries.forEach(({isIntersecting,target})=>{
+  if(!isIntersecting)return;
+  target.loading='eager';
+  target.decode().catch(()=>{}).then(refreshMedia);
+  mediaObserver.unobserve(target);
+}),{rootMargin:'100% 0px'});
+document.querySelectorAll('.veh-pin img,.en-pin img,.people-chapter img').forEach(img=>mediaObserver.observe(img));
+window.addEventListener('orientationchange',()=>setTimeout(refreshMedia,300));
+document.fonts.ready.then(refreshMedia);
 
 /* ---------- smart platform network ---------- */
 const NODES=[

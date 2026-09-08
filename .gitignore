@@ -39,3 +39,5 @@ next-env.d.ts
 
 # local development server logs
 .codex-local-server.log
+/output/playwright/
+/.playwright-cli/

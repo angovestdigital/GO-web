@@ -47,8 +47,24 @@ html=html.replace('gsap.registerPlugin(ScrollTrigger);',`if(typeof gsap==='undef
 // Keep the responsive breakpoint aligned with the navigation collapse point.
 // This also covers device-preview tools that expose a tablet-sized CSS viewport.
 html=html.replaceAll('@media(max-width:1023px){','@media(max-width:1100px){');
+html=html.replace("offset:-10,duration:1.4", "offset:-(document.querySelector('.nav').getBoundingClientRect().bottom+14),duration:1.4");
+html=html.replace('Hover or focus a node','Select a node to explore');
 html=html.replaceAll("mm.add('(min-width:1024px)'","mm.add('(min-width:1101px)'");
-html=html.replace('</head>','<link rel="stylesheet" href="/immersive-updates.css?v=mobile-2"/></head>');
+// Shared cinematic timelines adapt geometry at the breakpoint; energy has a
+// dedicated portrait composition so its session and physical connection coexist.
+const energyStart=html.indexOf('/* ---------- energy hub ---------- */');
+html=html.slice(0,energyStart).replaceAll("mm.add('(min-width:1101px)'", "mm.add({mobile:'(max-width:1100px)',desktop:'(min-width:1101px)'}")+html.slice(energyStart);
+html=html.replace("steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bottom 45%',onEnter:()=>setStep(i),onEnterBack:()=>setStep(i)}));", "mm.add('(min-width:1101px)',()=>{steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bottom 45%',onEnter:()=>setStep(i),onEnterBack:()=>setStep(i)}));});");
+// Remove static mobile overrides that outrank the animated inline properties.
+html=html.replace('position:relative;opacity:1!important;transform:none!important;clip-path:none!important;height:auto;padding:34px 0','position:absolute;height:100%;padding:34px 0');
+html=html.replace('.en-stage{transform:none!important}', '.en-stage{will-change:transform}');
+html=html.replace('opacity:1!important;pointer-events:auto','pointer-events:auto');
+html=html.replace(".to('#stageHybrid',{opacity:0,duration:.35},2.05)",".to('#carHybridWrap',{scale:()=>innerWidth<=1100?1.55:1.3,duration:.4},1.7).to('#stageHybrid',{opacity:0,duration:.35},2.05)");
+html=html.replace('.from(ecoLayers[1],{y:190,duration:1,ease:', '.fromTo(ecoLayers[1],{y:()=>innerWidth<=1100?60:190},{y:0,duration:1,ease:');
+html=html.replace('.from(ecoLayers[2],{y:380,duration:1,ease:', '.fromTo(ecoLayers[2],{y:()=>innerWidth<=1100?120:380},{y:0,duration:1,ease:');
+html=html.replace("{xPercent:-4},{xPercent:-19,duration:1.5", "{xPercent:()=>innerWidth<=1100?4:-4,scale:1},{xPercent:()=>innerWidth<=1100?-4:-19,scale:()=>innerWidth<=1100?1.15:1,duration:1.5");
+html=html.replace("/* ---------- smart platform network ---------- */",()=>fs.readFileSync('content/mobile-motion.js','utf8')+'\n/* ---------- smart platform network ---------- */');
+html=html.replace('</head>','<link rel="stylesheet" href="/immersive-updates.css?v=mobile-motion-3"/><link rel="stylesheet" href="/mobile-motion.css?v=3"/></head>');
 html=html.replace('</body>','<script src="/immersive-accessibility.js"></script></body>');
 fs.writeFileSync('content/immersive.html',html);
 fs.writeFileSync('app/immersive-document.ts','// Generated from the user-supplied immersive source by update-immersive.mjs\nconst html = '+JSON.stringify(html)+';\nexport default html;\n');
