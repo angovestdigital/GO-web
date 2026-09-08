@@ -1,9 +1,38 @@
 /* Portrait composition; native scrolling drives the same narrative. */
 mm.add('(max-width:1100px)',()=>{
   if(RM)return;
+  const ecoPin=$('.eco-pin');
+  let ecoPhase=-1;
+  const setEcoPhase=(index,ready)=>{
+    if(index!==ecoPhase){ecoPhase=index;autoEco=index;if(ecoManual===null)setEcoActive(index);}
+    ecoPin.classList.toggle('copy-ready',ready);
+  };
+  gsap.set(ecoLayers[1],{y:78});
+  gsap.set(ecoLayers[2],{y:156});
+  setEcoPhase(0,true);
+  gsap.timeline({scrollTrigger:{trigger:ecoPin,start:'top top',end:'+=185%',scrub:.7,pin:true,anticipatePin:1,invalidateOnRefresh:true,
+    onUpdate:self=>{
+      const p=self.progress;
+      if(p<.18)setEcoPhase(0,true);
+      else if(p<.42)setEcoPhase(0,false);
+      else if(p<.58)setEcoPhase(1,true);
+      else if(p<.82)setEcoPhase(1,false);
+      else setEcoPhase(2,true);
+    }}})
+    .to(ecoLayers[1],{y:0,duration:.5,ease:'power2.inOut'},.5)
+    .to(ecoLayers[2],{y:78,duration:.5,ease:'power2.inOut'},.5)
+    .to(ecoLayers[2],{y:0,duration:.5,ease:'power2.inOut'},1.5)
+    .to({},{duration:.55});
+
   let current=-1;
   const phoneWrap=$('.app-phone-wrap');
-  const sizePhone=()=>phoneWrap.style.setProperty('--phone-scale',Math.min(.72,phoneWrap.clientHeight/744,(innerWidth-44)/360));
+  const sizePhone=()=>{
+    const landscape=innerWidth>innerHeight;
+    const scale=landscape
+      ?Math.min(.52,phoneWrap.clientHeight/744,phoneWrap.clientWidth/360)
+      :Math.min(.9,Math.max(.72,(innerWidth*.76)/360),(innerHeight-96)/744);
+    phoneWrap.style.setProperty('--phone-scale',scale.toFixed(4));
+  };
   sizePhone();
   ScrollTrigger.addEventListener('refreshInit',sizePhone);
   const select=i=>{if(i===current)return;current=i;setStep(i);};
@@ -38,7 +67,7 @@ mm.add('(max-width:1100px)',()=>{
     .fromTo('#enCar',{scale:.5,opacity:0,svgOrigin:'700 540'},{scale:1,opacity:1,duration:.35},.9)
     .to(session,{progress:1,duration:3.3,ease:'none',onUpdate:charging},0)
     .to({},{duration:.45});
-  return ()=>{$('#enStage').classList.remove('energy-flowing');ScrollTrigger.removeEventListener('refreshInit',sizePhone);};
+  return ()=>{$('#enStage').classList.remove('energy-flowing');ecoPin.classList.remove('copy-ready');ScrollTrigger.removeEventListener('refreshInit',sizePhone);};
 });
 
 // Decode nearby media before entering pinned scenes. Coalesce refreshes rather

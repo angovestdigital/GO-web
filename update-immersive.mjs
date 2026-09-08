@@ -54,6 +54,11 @@ html=html.replaceAll("mm.add('(min-width:1024px)'","mm.add('(min-width:1101px)'"
 // dedicated portrait composition so its session and physical connection coexist.
 const energyStart=html.indexOf('/* ---------- energy hub ---------- */');
 html=html.slice(0,energyStart).replaceAll("mm.add('(min-width:1101px)'", "mm.add({mobile:'(max-width:1100px)',desktop:'(min-width:1101px)'}")+html.slice(energyStart);
+// The ecosystem uses a staged portrait timeline so explanatory copy enters
+// only after each card has completed its upward movement.
+const ecosystemStart=html.indexOf('/* ---------- ecosystem ---------- */');
+const appStart=html.indexOf('/* ---------- app ---------- */');
+html=html.slice(0,ecosystemStart)+html.slice(ecosystemStart,appStart).replace("mm.add({mobile:'(max-width:1100px)',desktop:'(min-width:1101px)'}", "mm.add('(min-width:1101px)'")+html.slice(appStart);
 html=html.replace("steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bottom 45%',onEnter:()=>setStep(i),onEnterBack:()=>setStep(i)}));", "mm.add('(min-width:1101px)',()=>{steps.forEach((st,i)=>ScrollTrigger.create({trigger:st,start:'top 60%',end:'bottom 45%',onEnter:()=>setStep(i),onEnterBack:()=>setStep(i)}));});");
 // Remove static mobile overrides that outrank the animated inline properties.
 html=html.replace('position:relative;opacity:1!important;transform:none!important;clip-path:none!important;height:auto;padding:34px 0','position:absolute;height:100%;padding:34px 0');
@@ -64,7 +69,7 @@ html=html.replace('.from(ecoLayers[1],{y:190,duration:1,ease:', '.fromTo(ecoLaye
 html=html.replace('.from(ecoLayers[2],{y:380,duration:1,ease:', '.fromTo(ecoLayers[2],{y:()=>innerWidth<=1100?120:380},{y:0,duration:1,ease:');
 html=html.replace("{xPercent:-4},{xPercent:-19,duration:1.5", "{xPercent:()=>innerWidth<=1100?4:-4,scale:1},{xPercent:()=>innerWidth<=1100?-4:-19,scale:()=>innerWidth<=1100?1.15:1,duration:1.5");
 html=html.replace("/* ---------- smart platform network ---------- */",()=>fs.readFileSync('content/mobile-motion.js','utf8')+'\n/* ---------- smart platform network ---------- */');
-html=html.replace('</head>','<link rel="stylesheet" href="/immersive-updates.css?v=mobile-motion-3"/><link rel="stylesheet" href="/mobile-motion.css?v=3"/></head>');
+html=html.replace('</head>','<link rel="stylesheet" href="/immersive-updates.css?v=mobile-motion-4"/><link rel="stylesheet" href="/mobile-motion.css?v=4"/></head>');
 html=html.replace('</body>','<script src="/immersive-accessibility.js"></script></body>');
 fs.writeFileSync('content/immersive.html',html);
 fs.writeFileSync('app/immersive-document.ts','// Generated from the user-supplied immersive source by update-immersive.mjs\nconst html = '+JSON.stringify(html)+';\nexport default html;\n');
